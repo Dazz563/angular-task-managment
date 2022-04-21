@@ -1,0 +1,55 @@
+<div class="task-container">
+    <h1>Lets get things done!</h1>
+    <div class="create-task">
+        <button (click)="createEditTask()" mat-raised-button>
+            CREATE TASK
+            <mat-icon matSuffix class="mat-18">add</mat-icon>
+        </button>
+    </div>
+    <div class="search">
+        <mat-form-field class="example-form-field" appearance="legacy">
+            <mat-label>Search</mat-label>
+            <input #searchInput matInput type="text" />
+            <!-- <button matSuffix mat-icon-button (click)="searchInput.value = ''">
+                <mat-icon>close</mat-icon>
+            </button> -->
+        </mat-form-field>
+    </div>
+    <div class="status-filter">
+        <mat-form-field appearance="legacy">
+            <mat-label>Status Filter</mat-label>
+            <mat-select>
+                <!-- <mat-option value="''">ALL</mat-option> -->
+                <mat-option *ngFor="let status of statuses" [value]="status">
+                    {{ status }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="tasks">
+        <ng-container *ngIf="taskService.tasks$ | async as tasks">
+            <div class="single-task" *ngFor="let task of tasks">
+                <div class="date-delete">
+                    <h3>Created at: {{ task.created_at | date }}</h3>
+                    <div class="options">
+                        <!-- <mat-icon (click)="createEditTask(task)" class="mat-18">edit</mat-icon> -->
+                        <mat-icon (click)="deleteTask(task)" color="warn" class="mat-18">delete</mat-icon>
+                    </div>
+                </div>
+                <h1>{{ task.title }}</h1>
+                <p>{{ task.description }}</p>
+                <div class="status-change">
+                    <p>{{ task.status }}</p>
+                    <mat-form-field appearance="legacy">
+                        <mat-label>Update Status</mat-label>
+                        <mat-select (selectionChange)="updateStatus(task.id, $event)">
+                            <mat-option *ngFor="let status of statuses" [value]="status">
+                                {{ status }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

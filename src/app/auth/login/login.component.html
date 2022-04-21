@@ -1,0 +1,21 @@
+<div class="auth-container">
+    <!-- LOGIN -->
+    <mat-card class="login-card">
+        <h1 class="center-text">Manage My Tasks</h1>
+        <h2 class="center-text">Welcome to your daily manager</h2>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+            <mat-form-field appearance="standard">
+                <mat-label>Email</mat-label>
+                <input formControlName="email" type="text" matInput />
+            </mat-form-field>
+            <mat-form-field appearance="standard">
+                <mat-label>Password</mat-label>
+                <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" type="password" matInput />
+                <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </mat-form-field>
+            <button [disabled]="loginForm.invalid" class="mt-1" mat-raised-button>Login</button>
+            <p routerLink="/register" class="center-text mt-1 pointer">Need to register?</p>
+            <p routerLink="/forgot-password" class="fgt-pass center-text mt-1 pointer">Forgot Password?</p>
+        </form>
+    </mat-card>
+</div>

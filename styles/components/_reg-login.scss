@@ -1,0 +1,25 @@
+.auth-container {
+    height: 100%;
+
+    // Layout
+    display: grid;
+    place-items: center;
+
+    .reg-card,
+    .login-card {
+        width: 350px;
+
+        mat-form-field {
+            width: 100%;
+        }
+
+        button {
+            width: 100%;
+            height: 45px;
+        }
+
+        .fgt-pass {
+            font-size: 12px;
+        }
+    }
+}

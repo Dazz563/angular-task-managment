@@ -1,0 +1,40 @@
+.task-container {
+    margin: auto;
+    margin-top: 20px;
+    max-width: 800px;
+    // Layout
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    padding: 0 10px;
+
+    .create-task,
+    .status-filter {
+        justify-self: end;
+    }
+    .tasks {
+        grid-column: 1 / -1;
+        .single-task {
+            border-top: 2px solid #eee;
+        }
+        .date-delete {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1rem;
+
+            mat-icon {
+                cursor: pointer;
+            }
+        }
+        h3,
+        h1 {
+            margin: 0;
+        }
+        .status-change {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+}

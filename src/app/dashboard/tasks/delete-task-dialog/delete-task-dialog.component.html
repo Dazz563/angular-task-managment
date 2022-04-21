@@ -1,0 +1,10 @@
+<div class="create-delete-task-form">
+    <!-- <h2 mat-dialog-title>{{ description }}</h2> -->
+    <mat-dialog-content>
+        <h1 class="center-text">Delete this task?</h1>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button mat-raised-button (click)="close()">Dismiss</button>
+        <button mat-raised-button color="warn" (click)="save()">Delete</button>
+    </mat-dialog-actions>
+</div>
