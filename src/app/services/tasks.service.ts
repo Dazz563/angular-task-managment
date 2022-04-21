@@ -19,7 +19,7 @@ export class TaskModel {
 export class TasksService {
     private subject = new BehaviorSubject<TaskModel[]>([]);
     tasks$: Observable<TaskModel[]> = this.subject.asObservable();
-    BASE_URL = 'http://localhost:3000';
+    BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
     constructor(private http: HttpClient, private snackbar: MatSnackBar) {
         this.getTasks().subscribe((res) => {
             this.subject.next(res);
