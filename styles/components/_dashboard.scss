@@ -1,9 +1,6 @@
 mat-toolbar {
     display: flex;
     justify-content: space-between;
-    h1 {
-        // text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    }
 }
 
 mat-sidenav {
@@ -12,8 +9,4 @@ mat-sidenav {
 
 mat-nav-list a mat-icon {
     margin-right: 10px;
-}
-
-.logout {
-    // margin-left: auto !important;
 }

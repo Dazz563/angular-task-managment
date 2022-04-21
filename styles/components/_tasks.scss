@@ -1,6 +1,6 @@
 .task-container {
     margin: auto;
-    margin-top: 20px;
+    margin-top: 40px;
     max-width: 800px;
     // Layout
     display: grid;
@@ -10,6 +10,8 @@
 
     .create-task,
     .status-filter {
+        margin-top: 20px;
+
         justify-self: end;
     }
     .tasks {

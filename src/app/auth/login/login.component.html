@@ -11,7 +11,7 @@
             <mat-form-field appearance="standard">
                 <mat-label>Password</mat-label>
                 <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" type="password" matInput />
-                <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                <mat-icon color="primary" matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </mat-form-field>
             <button color="primary" [disabled]="loginForm.invalid" class="mt-1" mat-raised-button>Login</button>
             <p routerLink="/register" class="center-text mt-1 pointer">Need to register?</p>
