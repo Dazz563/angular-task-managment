@@ -12,7 +12,7 @@
             <mat-form-field appearance="standard">
                 <mat-label>Password</mat-label>
                 <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" type="password" matInput />
-                <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                <mat-icon color="primary" matSuffix (click)="hidePassword = !hidePassword">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 <mat-error *ngIf="regForm.hasError">Password is too weak (1 upper, 1 lower, 1 special char)</mat-error>
             </mat-form-field>
             <button [disabled]="regForm.invalid" class="mt-1" mat-raised-button>Register</button>
