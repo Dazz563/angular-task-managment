@@ -75,6 +75,11 @@ export class AuthService {
                     this.subject.next(token.accessToken);
                     // localStorage.setItem(AUTH_DATA, JSON.stringify(token));
                     localStorage.setItem('id_token', token.accessToken);
+                    // Navigate to login after token expiration
+                    setTimeout(() => {
+                        this.router.navigateByUrl('/');
+                        localStorage.removeItem('id_token');
+                    }, 1000 * 60 * 60);
                 })
             )
             .subscribe({
