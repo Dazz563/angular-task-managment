@@ -2,6 +2,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {BehaviorSubject, Observable, take, tap} from 'rxjs';
+import {AppLoaderService} from './app-loader.service';
 
 export class TaskModel {
     id: string;
@@ -20,9 +21,13 @@ export class TasksService {
     private subject = new BehaviorSubject<TaskModel[]>([]);
     tasks$: Observable<TaskModel[]> = this.subject.asObservable();
     BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
-    constructor(private http: HttpClient, private snackbar: MatSnackBar) {
+    constructor(private http: HttpClient, private snackbar: MatSnackBar, private loader: AppLoaderService) {
+        // Loader
+        loader.open();
         this.getTasks().subscribe((res) => {
             this.subject.next(res);
+            // Loader
+            loader.close();
         });
     }
 
@@ -39,27 +44,37 @@ export class TasksService {
 
     // Create new task
     createTask(title: string, description: string) {
+        // Loader
+        this.loader.open();
         this.http.post(`${this.BASE_URL}/tasks`, {title, description}).subscribe({
             next: (taskRes: TaskModel) => {
-                console.log(taskRes);
                 // Reactive
                 const tasks = this.subject.getValue();
                 const newTasks = [...tasks];
                 newTasks.push(taskRes);
                 this.subject.next(newTasks);
+                // Loader
+                this.loader.close();
+                // Handle success notification
+                this.snackbar.open('Success', 'Task Created', {duration: 4000});
             },
             error: (error) => {
+                // Handle error
                 console.log(error);
+                // Loader
+                this.loader.close();
+                // Handle error notification
+                this.snackbar.open('Oops', 'Something went wrong!', {duration: 4000});
             },
         });
     }
 
     // Update task status
     updateTaskStatus(id: string, status: string) {
-        console.log('Status in service', status);
+        // Loader
+        this.loader.open();
         this.http.patch(`${this.BASE_URL}/tasks/${id}/status`, {status: status}).subscribe({
             next: (taskRes: TaskModel) => {
-                console.log(taskRes);
                 // Reactive
                 const tasks = this.subject.getValue();
                 const taskIndex = tasks.findIndex((task) => task.id == id);
@@ -70,15 +85,25 @@ export class TasksService {
                     status,
                 };
                 this.subject.next(newTasks);
+                // Loader
+                this.loader.close();
+                // Handle success notification
+                this.snackbar.open('Success', 'Task Updated', {duration: 4000});
             },
             error: (error) => {
+                // Handle error
                 console.log(error);
+                // Loader
+                this.loader.close();
+                // Handle error notification
+                this.snackbar.open('Oops', 'Something went wrong!', {duration: 4000});
             },
         });
     }
 
     // Delete task
     deleteTask(id: string) {
+        this.loader.open();
         this.http.delete(`${this.BASE_URL}/tasks/${id}`).subscribe({
             next: (taskRes: TaskModel) => {
                 console.log(taskRes);
@@ -86,10 +111,18 @@ export class TasksService {
                 const tasks = this.subject.getValue();
                 const newTasks = tasks.filter((task) => task.id != id);
                 this.subject.next(newTasks);
-                this.snackbar.open('Delete', 'Deleted successfully', {duration: 4000});
+                // Loader
+                this.loader.close();
+                // Handle success notification
+                this.snackbar.open('Success', 'Deleted successfully', {duration: 4000});
             },
             error: (error) => {
+                // Handle error
                 console.log(error);
+                // Loader
+                this.loader.close();
+                // Handle error notification
+                this.snackbar.open('Oops', 'Something went wrong!', {duration: 4000});
             },
         });
     }

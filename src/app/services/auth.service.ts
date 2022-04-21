@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
 import {BehaviorSubject, map, Observable, shareReplay, tap} from 'rxjs';
+import {AppLoaderService} from './app-loader.service';
 
 const AUTH_DATA = 'auth_data';
 
@@ -32,7 +33,8 @@ export class AuthService {
     accessToken$: Observable<string> = this.subject.asObservable();
     isLoggedIn$: Observable<boolean>;
     isLoggedOut$: Observable<boolean>;
-    constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar) {
+
+    constructor(private http: HttpClient, private router: Router, private snackbar: MatSnackBar, private loader: AppLoaderService) {
         this.isLoggedIn$ = this.accessToken$.pipe(map((token) => !!token));
         this.isLoggedOut$ = this.isLoggedIn$.pipe(map((loggedIn) => !loggedIn));
 
@@ -44,11 +46,13 @@ export class AuthService {
 
     // Register
     register(newUser: UserModel) {
+        this.loader.open();
         this.http.post(`${this.BASE_URL}/auth/signup`, newUser).subscribe({
             next: (res: any) => {
                 console.log(res);
                 if (res) {
                     // Handle success notification
+                    this.loader.close();
                     this.snackbar.open('Success', 'Registered successfully', {duration: 4000});
                     this.router.navigateByUrl('/');
                 }
@@ -63,6 +67,7 @@ export class AuthService {
 
     // Login
     async login(user: UserModel) {
+        this.loader.open();
         this.http
             .post<AccessToken>(`${this.BASE_URL}/auth/signin`, user)
             .pipe(
@@ -75,6 +80,8 @@ export class AuthService {
             .subscribe({
                 next: (res: AccessToken) => {
                     if (res) {
+                        // Loader
+                        this.loader.close();
                         // Handle success notification
                         this.snackbar.open('Success', 'Welcome back!', {duration: 4000});
                         // Route user
@@ -84,6 +91,9 @@ export class AuthService {
                 error: (error) => {
                     // Handle error
                     console.log(error);
+                    // Loader
+                    this.loader.close();
+                    // Handle success notification
                     this.snackbar.open('Oops', 'Something went wrong!', {duration: 4000});
                 },
             });
@@ -91,9 +101,13 @@ export class AuthService {
 
     // Send forgot password mail
     async forgotPassword(email: string) {
+        // Loader
+        this.loader.open();
         this.http.post<object>(`${this.BASE_URL}/reset-password`, email).subscribe({
             next: (res: any) => {
                 if (res) {
+                    // Loader
+                    this.loader.close();
                     // Handle success notification
                     this.snackbar.open('Success', 'Please check your mail', {duration: 4000});
                     // Route user
@@ -103,6 +117,9 @@ export class AuthService {
             error: (error) => {
                 // Handle error
                 console.log(error);
+                // Loader
+                this.loader.close();
+                // Handle success notification
                 this.snackbar.open('Oops', 'Something went wrong!', {duration: 4000});
             },
         });
@@ -110,6 +127,8 @@ export class AuthService {
 
     // Reset password
     async resetPassword(resetData: ResetData) {
+        // Loader
+        this.loader.open();
         this.http.post<object>(`${this.BASE_URL}/reset`, resetData).subscribe({
             next: (res: any) => {
                 if (res) {
@@ -122,14 +141,21 @@ export class AuthService {
             error: (error) => {
                 // Handle error
                 console.log(error);
+                // Loader
+                this.loader.close();
+                // Handle error notification
                 this.snackbar.open('Oops', error.error.message, {duration: 4000});
             },
         });
     }
 
     logout() {
+        // Loader
+        this.loader.open();
         localStorage.removeItem('id_token');
         this.subject.next(null);
         this.router.navigateByUrl('/');
+        // Loader
+        this.loader.close();
     }
 }
