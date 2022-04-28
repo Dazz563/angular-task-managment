@@ -27,7 +27,8 @@ export class ResetData {
     providedIn: 'root',
 })
 export class AuthService {
-    BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
+    // BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
+    BASE_URL = 'http://localhost:3000';
     // User state
     private subject = new BehaviorSubject<string>(null);
     accessToken$: Observable<string> = this.subject.asObservable();

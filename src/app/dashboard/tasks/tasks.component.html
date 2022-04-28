@@ -20,6 +20,7 @@
             <mat-label>Status Filter</mat-label>
             <mat-select>
                 <!-- <mat-option value="''">ALL</mat-option> -->
+                <mat-option value="ALL"> ALL </mat-option>
                 <mat-option *ngFor="let status of statuses" [value]="status">
                     {{ status }}
                 </mat-option>

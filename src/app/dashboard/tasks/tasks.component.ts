@@ -24,22 +24,25 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
     // Search tasks
     ngAfterViewInit(): void {
-        // // This time out corrects NG0100: Expression has changed after it was checked
-        // setTimeout(() => {
-        //     // Search filter
-        //     const searchTasks$ = fromEvent<any>(this.searchInput.nativeElement, 'keyup').pipe(
-        //         map((event) => event.target.value),
-        //         debounceTime(400),
-        //         distinctUntilChanged(),
-        //         switchMap((search) => this.loadTasks(search))
-        //     );
-        //     // Status filter
-        //     const searchStatus$ = this.select.valueChange.subscribe((status) => {
-        //         this.taskService.tasks$ = this.loadTasks(null, status);
-        //     });
-        //     const initialTasks$ = this.loadTasks();
-        //     this.taskService.tasks$ = concat(initialTasks$, searchTasks$);
-        // }, 0);
+        // This time out corrects NG0100: Expression has changed after it was checked
+        setTimeout(() => {
+            // Search filter
+            const searchTasks$ = fromEvent<any>(this.searchInput.nativeElement, 'keyup')
+                .pipe(
+                    map((event) => event.target.value),
+                    debounceTime(400),
+                    distinctUntilChanged()
+                    // switchMap((search) => this.loadTasks(search))
+                )
+                .subscribe((res) => {
+                    console.log('Search res: ', res);
+                    this.taskService.filterTasksBySearch(res, null);
+                });
+            // Status filter
+            const searchStatus$ = this.select.valueChange.subscribe((status) => {
+                this.taskService.filterTasksBySearch(null, status);
+            });
+        }, 0);
     }
 
     loadTasks(search = '', status = ''): Observable<TaskModel[]> {

@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {BehaviorSubject, Observable, take, tap} from 'rxjs';
+import {BehaviorSubject, concat, filter, map, Observable, take, tap} from 'rxjs';
 import {AppLoaderService} from './app-loader.service';
 
 export class TaskModel {
@@ -20,7 +20,8 @@ export class TaskModel {
 export class TasksService {
     private subject = new BehaviorSubject<TaskModel[]>([]);
     tasks$: Observable<TaskModel[]> = this.subject.asObservable();
-    BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
+    // BASE_URL = 'https://arcane-fjord-24138.herokuapp.com';
+    BASE_URL = 'http://localhost:3000';
     constructor(private http: HttpClient, private snackbar: MatSnackBar, private loader: AppLoaderService) {
         // Loader
         loader.open();
@@ -40,6 +41,43 @@ export class TasksService {
         } else {
             return this.http.get<TaskModel[]>(`${this.BASE_URL}/tasks`);
         }
+    }
+
+    filterTasksBySearch(search: string, status: string) {
+        if (search) {
+            let filteredSearch$ = this.getTasks(search);
+            filteredSearch$.subscribe({
+                next: (res) => {
+                    console.log('Service filter res: ', res);
+                    // Reactive
+                    this.subject.next(res);
+                },
+            });
+        } else if (status) {
+            let filteredSearch$ = this.getTasks('', status);
+            filteredSearch$.subscribe({
+                next: (res) => {
+                    console.log('Service filter res: ', res);
+                    // Reactive
+                    this.subject.next(res);
+                },
+            });
+        } else if ((status = 'ALL')) {
+            this.getTasks().subscribe((res) => {
+                this.subject.next(res);
+            });
+        }
+    }
+
+    filterTasksByStatus(obs1: Observable<TaskModel[]>, search: string) {
+        let filteredSearch$ = this.getTasks(search);
+        filteredSearch$.subscribe({
+            next: (res) => {
+                console.log('Service filter res: ', res);
+                // Reactive
+                this.subject.next(res);
+            },
+        });
     }
 
     // Create new task
