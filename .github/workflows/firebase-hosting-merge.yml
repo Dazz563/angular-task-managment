@@ -23,8 +23,8 @@ jobs:
             npm install
             npm uninstall -g @angular/cli
             npm cache clean --force            
-            npm install -g  @angular/cli@12.2.5
-            npm link @angular/cli@12.2.5
+            npm install -g  @angular/cli@13.0.4
+            npm link @angular/cli@13.0.4
             ng build --configuration production
       
       - uses: FirebaseExtended/action-hosting-deploy@v0
