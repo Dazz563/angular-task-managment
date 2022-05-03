@@ -31,14 +31,14 @@
         <ng-container *ngIf="tasks$ | async as tasks">
             <div class="single-task" *ngFor="let task of tasks">
                 <div class="date-delete">
-                    <h3>Created at: {{ task.created_at | date }}</h3>
+                    <h3 class="created-at">Created at: {{ task.created_at | date }}</h3>
                     <div class="options">
                         <!-- <mat-icon (click)="createEditTask(task)" class="mat-18">edit</mat-icon> -->
                         <mat-icon (click)="deleteTask(task)" color="warn" class="mat-18">delete</mat-icon>
                     </div>
                 </div>
-                <h1>{{ task.title }}</h1>
-                <p>{{ task.description }}</p>
+                <h1 class="task-title">{{ task.title }}</h1>
+                <p class="task-description">{{ task.description }}</p>
                 <div class="status-change">
                     <p>{{ task.status }}</p>
                     <mat-form-field appearance="legacy">

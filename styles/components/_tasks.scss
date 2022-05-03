@@ -20,12 +20,29 @@
         grid-column: 1 / -1;
         .single-task {
             border-top: 2px solid #eee;
+
+            .task-title {
+                @media only screen and (max-width: 800px) {
+                    font-size: 1.1rem;
+                }
+            }
+            .task-description {
+                @media only screen and (max-width: 800px) {
+                    font-size: 0.8rem;
+                }
+            }
         }
         .date-delete {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-top: 1rem;
+
+            .created-at {
+                @media only screen and (max-width: 800px) {
+                    font-size: 0.7rem;
+                }
+            }
 
             mat-icon {
                 cursor: pointer;
@@ -39,6 +56,10 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            @media only screen and (max-width: 800px) {
+                font-size: 0.7rem;
+            }
         }
     }
 }
