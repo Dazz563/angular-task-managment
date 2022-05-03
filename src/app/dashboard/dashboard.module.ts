@@ -6,9 +6,10 @@ import {SharedModule} from '../shared/shared.module';
 import {TasksComponent} from './tasks/tasks.component';
 import { CreateTaskDialogComponent } from './tasks/create-task-dialog/create-task-dialog.component';
 import { DeleteTaskDialogComponent } from './tasks/delete-task-dialog/delete-task-dialog.component';
+import { PlanningTasksComponent } from '../planning-tasks/planning-tasks.component';
 
 @NgModule({
-    declarations: [DashboardComponent, TasksComponent, CreateTaskDialogComponent, DeleteTaskDialogComponent],
+    declarations: [DashboardComponent, TasksComponent, CreateTaskDialogComponent, DeleteTaskDialogComponent, PlanningTasksComponent],
     imports: [CommonModule, DashboardRoutingModule, SharedModule],
 })
 export class DashboardModule {}

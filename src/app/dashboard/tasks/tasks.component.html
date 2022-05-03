@@ -28,7 +28,7 @@
         </mat-form-field>
     </div>
     <div class="tasks">
-        <ng-container *ngIf="taskService.tasks$ | async as tasks">
+        <ng-container *ngIf="tasks$ | async as tasks">
             <div class="single-task" *ngFor="let task of tasks">
                 <div class="date-delete">
                     <h3>Created at: {{ task.created_at | date }}</h3>

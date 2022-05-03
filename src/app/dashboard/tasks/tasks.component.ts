@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/
 import {MatDialog} from '@angular/material/dialog';
 import {MatSelect, MatSelectChange} from '@angular/material/select';
 import {concat, concatMap, debounceTime, distinctUntilChanged, filter, fromEvent, map, Observable, switchMap, tap} from 'rxjs';
-import {TaskModel, TasksService} from 'src/app/services/tasks.service';
+import {TasksStoreService, TaskModel} from 'src/app/services/tasks-store.service';
 import {openNewOrEditDialog} from './create-task-dialog/create-task-dialog.component';
 import {openConfirmDeleteDialog} from './delete-task-dialog/delete-task-dialog.component';
 
@@ -13,13 +13,17 @@ import {openConfirmDeleteDialog} from './delete-task-dialog/delete-task-dialog.c
 })
 export class TasksComponent implements OnInit, AfterViewInit {
     statuses = ['OPEN', 'IN_PROGRESS', 'DONE'];
-    // tasks$: Observable<TaskModel[]>;
+    tasks$: Observable<TaskModel[]>;
     @ViewChild('searchInput') searchInput: ElementRef;
     @ViewChild(MatSelect) select: MatSelect;
-    constructor(public taskService: TasksService, private dialog: MatDialog) {}
+    constructor(private dialog: MatDialog, private tasksStore: TasksStoreService) {}
 
     ngOnInit(): void {
-        // this.tasks$ = this.taskService.tasks$;
+        this.reloadTasks();
+    }
+
+    reloadTasks() {
+        this.tasks$ = this.tasksStore.tasks$;
     }
 
     // Search tasks
@@ -31,22 +35,20 @@ export class TasksComponent implements OnInit, AfterViewInit {
                 .pipe(
                     map((event) => event.target.value),
                     debounceTime(400),
-                    distinctUntilChanged()
-                    // switchMap((search) => this.loadTasks(search))
+                    distinctUntilChanged(),
+                    switchMap((search) => this.tasksStore.filterBySearch(search))
                 )
-                .subscribe((res) => {
-                    console.log('Search res: ', res);
-                    this.taskService.filterTasksBySearch(res, null);
-                });
+                .subscribe();
+
             // Status filter
-            const searchStatus$ = this.select.valueChange.subscribe((status) => {
-                this.taskService.filterTasksBySearch(null, status);
+            this.select.valueChange.subscribe((status) => {
+                if (status == 'ALL') {
+                    this.tasksStore.loadAllTasks();
+                } else {
+                    this.tasksStore.filterByStatus(status).subscribe();
+                }
             });
         }, 0);
-    }
-
-    loadTasks(search = '', status = ''): Observable<TaskModel[]> {
-        return this.taskService.getTasks(search, status);
     }
 
     createEditTask(task?: TaskModel) {
@@ -57,7 +59,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
                     const {title, description} = res;
                     console.log('New or Edited task', res);
                     // API code to create or edit task goes here
-                    this.taskService.createTask(title, description);
+                    this.tasksStore.createTask(title, description);
                 },
                 error: (error) => {
                     // Handle error
@@ -68,7 +70,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
 
     updateStatus(id: string, event: MatSelectChange) {
         let status = event.value;
-        this.taskService.updateTaskStatus(id, status);
+        this.tasksStore.updateTaskStatus(id, status);
         console.log(id, status);
     }
 
@@ -80,7 +82,7 @@ export class TasksComponent implements OnInit, AfterViewInit {
                     console.log('Delete task? :', val);
                     // API code to create or edit task goes here
                     if (val) {
-                        this.taskService.deleteTask(task.id);
+                        this.tasksStore.deleteTask(task.id);
                     }
                 },
                 error: (error) => {

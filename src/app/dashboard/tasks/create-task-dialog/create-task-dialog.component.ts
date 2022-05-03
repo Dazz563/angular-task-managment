@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {TaskModel} from 'src/app/services/tasks.service';
+import {TaskModel} from 'src/app/services/tasks-store.service';
 
 @Component({
     selector: 'app-create-task-dialog',
